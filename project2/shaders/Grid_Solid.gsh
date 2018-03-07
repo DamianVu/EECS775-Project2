@@ -1,4 +1,4 @@
-#version 410 core
+#version 330 core
 
 // Grid_Solid.gsh - a geometry shader that replaces incoming triangles
 //                  with 0, 1, or 2 triangles that are above the current

@@ -1,4 +1,4 @@
-#version 410 core
+#version 330 core
 
 // Grid_Lines.gsh - a geometry shader that replaces incoming triangles
 //                  with 0 or 1 contour line running through it.

@@ -1,4 +1,4 @@
-#version 410 core
+#version 330 core
 
 uniform vec3 currentContourColor = vec3(1.0, 0.0, 0.0);
 

@@ -50,7 +50,7 @@ void GLFWController::createWindowAndRC(const std::string& windowTitle, int rcFla
 		glfwWindowHint(GLFW_DEPTH_BITS, 24);
 	setClearFlags(rcFlags);
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	int minor = 8; // Start AT LEAST one greater than where you really want to start
 	while ((theWindow == nullptr) && (minor > 0))
 	{
