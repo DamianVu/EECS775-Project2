@@ -1,0 +1,4 @@
+*.o
+lib/*
+*.so
+project2/main
