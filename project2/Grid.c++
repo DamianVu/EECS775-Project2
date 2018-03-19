@@ -5,28 +5,37 @@
 
 #include "Grid.h"
 
+// Dark color will be lowest elevation
+const float RED_MIN = 0.0;
+const float GREEN_MIN = 0.145;
+const float BLUE_MIN = 0.376;
+
 Grid::Grid(ShaderIF* sIF[],
-	int nRowsOfVerticesIn, int nColsOfVerticesIn, float* vertexValuesIn) :
+	int nRowsOfVerticesIn, int nColsOfVerticesIn, float* vertexValuesIn, int numContourLevelsIn, float* levelsIn) :
 		nRowsOfVertices(nRowsOfVerticesIn),
 		nColsOfVertices(nColsOfVerticesIn),
 		missingDataValue(-1.0), level(nullptr), numContourLevels(0), color(nullptr)
 {
+	shader1 = true;
+	shader2 = true;
+	shader3 = false;
 	for (int i=0 ; i<3 ; i++)
 		shaderIF[i] = sIF[i];
 	defineModel(vertexValuesIn);
 
-	// TEMPORARY: Either modify the constructor to accept this data or define
-	//            and implement a method to set this data, or do some
-	//            combination of both.
-	// BUT delete this code.  The expectations are that "color" has the same
-	//     length as "level". Both are assumed to be "numContourLevels" long.
-	numContourLevels = 1;
-	level = new float[numContourLevels];
+	numContourLevels = numContourLevelsIn;
+	level = levelsIn;
 	color = new vec3[numContourLevels];
-	// A "vec3" represents an RGB color in a 0..1 space:
-	//    RED               GREEN               BLUE
-	color[0][0] = 0.0; color[0][1] = 1.0; color[0][2] = 0.0;
-	// END: TEMPORARY TO BE DELETED
+
+	float incrementRed = (1 - RED_MIN) / numContourLevels;
+	float incrementGreen = (1 - GREEN_MIN) / numContourLevels;
+	float incrementBlue = (1 - BLUE_MIN) / numContourLevels;
+
+	for (int i = 0; i < numContourLevels; i++) {
+		color[i][0] = RED_MIN + (incrementRed * i);
+		color[i][1] = GREEN_MIN + (incrementGreen * i);
+		color[i][2] = BLUE_MIN + (incrementBlue * i);
+	}
 }
 
 Grid::~Grid()
@@ -113,6 +122,9 @@ void Grid::getMCBoundingBox(double* xyzLimits) const
 bool Grid::handleCommand(unsigned char anASCIIChar,
 							double ldsX, double ldsY)
 {
+	if (anASCIIChar == '1') shader1 = !shader1;
+	if (anASCIIChar == '2') shader2 = !shader2;
+	if (anASCIIChar == '3') shader3 = !shader3;
 	return this->ModelView::handleCommand(anASCIIChar, ldsX, ldsY);
 }
 
@@ -177,5 +189,29 @@ void Grid::render(int whichShader)
 
 void Grid::render()
 {
-	render(0);
+	if (shader1 && shader2 && shader3)
+	{
+		render(0);
+		render(2);
+	}
+	else if (shader2 && shader3)
+		render(2);
+	else if (shader1 && shader2)
+	{
+		render(0);
+		render(1);
+	}
+	else if (shader1 && shader3)
+	{
+		render(0);
+		render(2);
+	}
+	else if (shader1)
+		render(0);
+	else if (shader2)
+		render(1);
+	else if (shader3)
+		render(2);
+
+
 }

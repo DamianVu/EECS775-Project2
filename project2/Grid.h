@@ -21,7 +21,7 @@ class Grid : public ModelView
 {
 public:
 	Grid(ShaderIF* sIF[],
-		int nRowsOfVertices, int nColsOfVertices, float* vertexValues);
+		int nRowsOfVertices, int nColsOfVertices, float* vertexValuesIn, int numContourLevelsIn, float* levelsIn);
 	virtual ~Grid();
 
 	// You can declare and implement methods here to be called from
@@ -46,6 +46,10 @@ private:
 	GLuint vao[1];
 	GLuint vbo[2];
 	GLuint* ebo;
+
+	bool shader1;
+	bool shader2;
+	bool shader3;
 
 	void defineModel(float* gridValues);
 	void drawGrid();
